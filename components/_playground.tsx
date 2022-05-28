@@ -12,21 +12,20 @@ import { Button } from "./v2/Button";
 import Stack from "./v2/Stack";
 
 function BaseButton(props) {
+    const [button, setButton] = useState<HTMLButtonElement>(false);
+    const hasStack = button?.children[0]?.attributes.getNamedItem('data-comp-stack')?.value === "true" ? true : false;
     
-    const buttonRef = useRef<HTMLButtonElement | null>(null) // <- this doesn't change between renders
-    const hasStack = buttonRef.current?.children[0]?.attributes.getNamedItem('data-comp-stack')?.value === "true" ? true : false
-    
-
-    useEffect(() => {
-        if(buttonRef.current) {
-            console.log(buttonRef.current)
-        }
-    }, [buttonRef, hasStack])
-    
-      //
-    return (
-        <button ref={buttonRef} data-stack-as-child={hasStack} {...props}/>
+    useEffect(
+        () => {
+            if(buttonRef.current) {
+                console.log(buttonRef.current)
+            }
+        }, 
+        [buttonRef, hasStack],
     )
+    
+    // Why not just pass in setButton? Well you can try that, sometimes...I got problems though when I tried it but you can try and see if that works too.
+    return <button ref={c => { setButton(c); }} data-stack-as-child={hasStack} {...props} />;
 }
 
 function BaseStack() {
